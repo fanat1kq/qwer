@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  ideas_service:
+    image: $IMAGE_NAME
+    container_name: ideas_service
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - ideas-service-4-dev
+
+networks:
+  ideas-service-4-dev:
+    external: true
