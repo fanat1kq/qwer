@@ -1,0 +1,134 @@
+# Определение существующих stages в пайплайне
+stages:
+  - lint
+  - test
+  - compile
+  - build
+  - deploy
+  - publish
+
+# Определение глобальных переменных во время выполнения пайплайна
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+  IMAGE_TAG: $CI_COMMIT_REF_NAME-$CI_COMMIT_SHORT_SHA
+  IMAGE_NAME: $CI_REGISTRY_IMAGE:$IMAGE_TAG
+  MVN_VERSION: 3.9.9-sapmachine-21
+  POSTGRES_PORT: 5432
+
+# Stage запуска линтера для проверки кода приложения
+lint:
+  stage: lint
+  image: maven:$MVN_VERSION
+  script:
+    - mvn clean validate $MAVEN_BUILD_OPTS -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
+  only:
+    - main
+    - merge_requests
+
+# Stage запуска тестов приложения
+test:
+  stage: test
+  image: maven:$MVN_VERSION
+  services:
+    - docker:20.10.12-dind
+  script:
+    - mvn clean test --log-file log.txt $MAVEN_BUILD_OPTS -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
+  after_script:
+    - cat log.txt
+  artifacts:
+    when: always
+    name: "log"
+    paths:
+      - log.txt
+    expire_in: 1 day
+  only:
+    - main
+    - merge_requests
+
+# Stage для компиляции кода приложения и получения *.jar-файла
+compile:
+  stage: compile
+  image: maven:$MVN_VERSION
+  services:
+    - docker:20.10.12-dind
+  script:
+    - mvn clean package $MAVEN_BUILD_OPTS -DskipTests -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Dmaven.wagon.http.ssl.ignore.validity.dates=true
+  artifacts:
+    name: "$CI_PROJECT_NAME"
+    paths:
+      - "./target/*.jar"
+    expire_in: 1 week
+  only:
+    - main
+
+# Stage сборки docker-образа приложения с помощью Dockerfile и размещения его во внутреннем Gitlab Container Registry
+build_image:
+  stage: build
+  image: docker:20.10.12
+  services:
+    - name: docker:20.10.12-dind
+      command: [ "--tls=false" ]
+  dependencies:
+    - compile
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+    - docker build --network host --pull -f Dockerfile -t "$IMAGE_NAME" .
+    - docker push "$IMAGE_NAME"
+  only:
+    - main
+
+# Stage деплоя приложения с использованием ранее собранного образа и docker-compose
+deploy_dev:
+  stage: deploy
+  image: alpine:latest
+  before_script:
+    # Добавление SSH ключа в окружение выполнения данной джобы для доступа на удаленный сервер
+    - apk add --no-cache bash git gettext openssh
+    - mkdir -p ~/.ssh
+    - echo "$GITLABCI_USER_SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - eval $(ssh-agent -s)
+    - ssh-add ~/.ssh/id_rsa
+  script:
+    # Динамическая сборка .env файла
+    - |
+      cat <<EOL >.env
+      # Postgres connection envs
+      POSTGRES_HOST=$POSTGRES_HOST
+      POSTGRES_PORT=$POSTGRES_PORT
+      POSTGRES_DB=ideas_dev
+      POSTGRES_USER=ideas_dev_user
+      POSTGRES_PASSWORD=$CI_POSTGRES_PASSWORD
+      
+      # Kafka connection env
+      KAFKA_BOOTSTRAP_SERVERS=$KAFKA_HOST
+      EOL
+    # Создание на сервере директории для файлов проекта
+    - ssh gitlabci_user@ideas-service-4-dev.ylab.io "mkdir -p /var/www/ideas-service-4-dev/ideas && exit"
+    # Остановка и удаление предыдущих версий контейнеров
+    - ssh gitlabci_user@ideas-service-4-dev.ylab.io "cd /var/www/ideas-service-4-dev/ideas && docker compose down --rmi all || true && sleep 5 && exit"
+    # Проверка существования Docker-сети для проекта, создание новой сети, если она отсутствует
+    - ssh gitlabci_user@ideas-service-4-dev.ylab.io "docker network inspect ideas-service-4-dev >/dev/null 2>&1 || docker network create ideas-service-4-dev"
+    # Динамическая сборка docker-compose.yml файла, подставление в него переменной с именем текущего образа
+    - envsubst '${IMAGE_NAME}' < docker-compose.template > docker-compose.yml
+    # Копирование docker-compose.yml и .env на удаленный сервер в директорию проекта
+    - scp docker-compose.yml .env gitlabci_user@ideas-service-4-dev.ylab.io:/var/www/ideas-service-4-dev/ideas
+    # Авторизация в Gitlab Container Registry для получения доступа к образу приложения, опубликованного на предыдущем шаге и запуск приложения из директории проекта с помощью docker-compose.yml
+    - ssh gitlabci_user@ideas-service-4-dev.ylab.io "cd /var/www/ideas-service-4-dev/ideas && docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY && docker compose up -d && exit"
+    # Вывод существующих контейнеров и их текущего состояния в консоль для отображения информации в логе пайплайна
+    - ssh gitlabci_user@ideas-service-4-dev.ylab.io "docker ps -a && exit"
+  only:
+    - main
+
+publish_to_registry:
+  stage: publish
+  image: maven:$MVN_VERSION
+  script:
+    - mvn deploy -s settings.xml
+  only:
+    - main
+  when: manual

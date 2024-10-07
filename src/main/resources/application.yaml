@@ -14,14 +14,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
-    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/ideas_db}
+    url:
     driver-class-name: org.postgresql.Driver
-    username: ${DATASOURCE_USERNAME:postgres}
-    password: ${DATASOURCE_PASSWORD:postgres}
+    username:
+    password:
   kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP:localhost:9092}
+    bootstrap-servers:
     consumer:
-      group-id: ${KAFKA_GROUP_ID:my-group-id}
+      group-id:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
