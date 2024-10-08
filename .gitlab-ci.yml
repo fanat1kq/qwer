@@ -127,6 +127,8 @@ deploy_dev:
 publish_to_registry:
   stage: publish
   image: maven:$MVN_VERSION
+  services:
+    - docker:20.10.12-dind
   script:
     - mvn deploy -s settings.xml
   only:
