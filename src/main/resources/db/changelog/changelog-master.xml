@@ -5,6 +5,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <!--    your files here-->
-
+    <include file="SBI4-34-create-schema-ideas.xml" relativeToChangelogFile="true"/>
+    <include file="SBI4-34-create-table-files.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

@@ -5,14 +5,14 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * Base repository interface for idea entities. Provides basic CRUD operations and specification
+ * Base repository interface for entities. Provides basic CRUD operations and specification
  * support for interacting with the database.
  *
  * @param <E> the type of the entity
  * @param <I> the type of the entity's identifier
  */
 @NoRepositoryBean
-public interface BaseFileRepository<E, I> extends JpaRepository<E, I>,
+public interface BaseRepository<E, I> extends JpaRepository<E, I>,
     JpaSpecificationExecutor<E> {
 
 }

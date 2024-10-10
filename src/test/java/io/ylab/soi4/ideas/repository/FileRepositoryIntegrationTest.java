@@ -16,11 +16,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.utility.TestcontainersConfiguration;
+import io.ylab.soi4.ideas.TestcontainersConfiguration;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-class IdeaFileRepositoryIntegrationTest {
+class FileRepositoryIntegrationTest {
 
     @Autowired
     private FileRepository fileRepository;
@@ -42,8 +42,8 @@ class IdeaFileRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("Saving an idea. Returns the saved idea when the idea is saved.")
-    void testSaveIdea_shouldReturnSavedIdea_whenIdeaIsSaved() {
+    @DisplayName("Saving an file. Returns the saved file when the file is saved.")
+    void testSaveFile_shouldReturnSavedFile_whenFileIsSaved() {
         File savedFile = fileRepository.save(testFile);
 
         assertThat(savedFile).isNotNull();
@@ -52,50 +52,50 @@ class IdeaFileRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("Saving an idea with invalid data. "
-        + "Throws an exception when trying to save an idea with null in required fields.")
-    void testSaveIdea_withInvalidData_shouldThrowException() {
-        File invalidIdea =File.builder().ideaId(1L).fileId(1l).filePath("/Test").fileName("Test name")
-            .contentType("Test type").fileSize(123L).isActive(false).build();
+    @DisplayName("Saving an file with invalid data. "
+        + "Throws an exception when trying to save an file with null in required fields.")
+    void testSaveFile_withInvalidData_shouldThrowException() {
+        File invalidFile =File.builder().ideaId(0L).fileId(0l).filePath(null).fileName(null)
+            .contentType(null).fileSize(0L).isActive(false).build();
 
-        assertThatThrownBy(() -> fileRepository.save(invalidIdea)).isInstanceOf(
+        assertThatThrownBy(() -> fileRepository.save(invalidFile)).isInstanceOf(
             DataIntegrityViolationException.class);
     }
 
     @Test
-    @DisplayName("Finding an idea. Returns the idea when it exists.")
-    void testFindIdeaById_shouldReturnIdea_whenIdeaExists() {
-        File savedIdea = fileRepository.save(testFile);
+    @DisplayName("Finding an file. Returns the file when it exists.")
+    void testFindFileById_shouldReturnFile_whenFileExists() {
+        File savedFile = fileRepository.save(testFile);
 
-        Optional<File> foundIdea = fileRepository.findById(savedIdea.getIdeaId());
+        Optional<File> foundFile = fileRepository.findById(savedFile.getIdeaId());
 
-        assertThat(foundIdea).isPresent();
-        assertThat(foundIdea.get().getContentType()).isEqualTo("Test type");
+        assertThat(foundFile).isPresent();
+        assertThat(foundFile.get().getContentType()).isEqualTo("Test type");
     }
 
     @Test
-    @DisplayName("Finding an idea by a non-existent identifier. "
-        + "Returns an empty value when searching for a non-existent idea.")
-    void testFindIdeaById_shouldReturnEmpty_whenIdeaDoesNotExist() {
-        Optional<File> foundIdea = fileRepository.findById(999L);
+    @DisplayName("Finding an file by a non-existent identifier. "
+        + "Returns an empty value when searching for a non-existent file.")
+    void testFindFileById_shouldReturnEmpty_whenFileDoesNotExist() {
+        Optional<File> foundFile = fileRepository.findById(999L);
 
-        assertThat(foundIdea).isNotPresent();
+        assertThat(foundFile).isNotPresent();
     }
 
     @Test
-    @DisplayName("Updating an idea. Returns the updated idea when the idea is updated.")
-    void testUpdateIdea_shouldReturnUpdatedIdea_whenIdeaIsUpdated() {
-        File savedIdea = fileRepository.save(testFile);
-        savedIdea.setFileName("Updated file name");
+    @DisplayName("Updating an file. Returns the updated file when the file is updated.")
+    void testUpdateFile_shouldReturnUpdatedFile_whenFileIsUpdated() {
+        File savedFile = fileRepository.save(testFile);
+        savedFile.setFileName("Updated file name");
 
-        File updatedIdea = fileRepository.save(savedIdea);
+        File updatedFile = fileRepository.save(savedFile);
 
-        assertThat(updatedIdea.getFileName()).isEqualTo("Updated file name");
+        assertThat(updatedFile.getFileName()).isEqualTo("Updated file name");
     }
 
     @Test
-    @DisplayName("Deleting an idea. Does not return it when the idea is deleted.")
-    void testDeleteIdea_shouldNotReturnIdea_whenIdeaIsDeleted() {
+    @DisplayName("Deleting an file. Does not return it when the file is deleted.")
+    void testDeleteFile_shouldNotReturnFile_whenFileIsDeleted() {
         File savedFile = fileRepository.save(testFile);
 
         fileRepository.deleteById(savedFile.getIdeaId());
@@ -105,18 +105,18 @@ class IdeaFileRepositoryIntegrationTest {
     }
 
     @Test
-    @DisplayName("Deleting a non-existent idea. "
-        + "Does not throw an exception when trying to delete a non-existent idea.")
-    void testDeleteIdea_shouldNotThrowException_whenIdeaDoesNotExist() {
+    @DisplayName("Deleting a non-existent file. "
+        + "Does not throw an exception when trying to delete a non-existent file.")
+    void testDeleteFile_shouldNotThrowException_whenFileDoesNotExist() {
         assertThatCode(() -> fileRepository.deleteById(333L)).doesNotThrowAnyException();
     }
 
     @Test
-    @DisplayName("Finding all ideas. Returns all ideas when multiple ideas exist.")
-    void testFindAllIdeas_shouldReturnAllIdeas_whenMultipleIdeasExist() {
+    @DisplayName("Finding all files. Returns all files when multiple files exist.")
+    void testFindAllFiles_shouldReturnAllFiles_whenMultipleFilesExist() {
         fileRepository.save(testFile);
         File anotherFile = File.builder().ideaId(2L).fileId(1l).filePath("/Another/path").fileName("Another test name")
-            .contentType("Another test type").fileSize(456L).build();
+            .contentType("Another test type").fileSize(456L).isActive(false).build();
         fileRepository.save(anotherFile);
 
         Iterable<File> files = fileRepository.findAll();

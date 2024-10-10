@@ -6,41 +6,42 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet id="create_ideas_table" author="svetlana koreneva">
+    <changeSet id="create_files_table" author="Nikita Panteleenko">
         <preConditions onFail="MARK_RAN">
             <not>
-                <tableExists tableName="ideas"/>
+                <tableExists tableName="files"/>
             </not>
         </preConditions>
 
-        <createTable schemaName="ideas" tableName="ideas" remarks="Table for storing ideas details">
-            <column name="idea_id" type="BIGSERIAL"
-                remarks="Unique identifier idea (Primary Key)">
+        <createTable schemaName="ideas" tableName="files" remarks="Table for storing files">
+            <column name="idea_file_id" type="bigserial"
+                remarks="Unique identifier file (Primary Key)">
                 <constraints primaryKey="true"
-                    primaryKeyName="ideas_pkey"
+                    primaryKeyName="idea_file_pkey"
                     nullable="false"/>
             </column>
-            <column name="title" type="VARCHAR(255)" remarks="Title of the idea">
+            <column name="idea_id" type="bigint"
+                remarks="Identifier of the idea">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="file_id" type="bigint"
+                remarks="Identifier of the file">
                 <constraints nullable="false"/>
             </column>
-            <column name="annotation" type="VARCHAR(255)"
-                remarks="Short annotation or summary of the idea"/>
-            <column name="description" type="VARCHAR" remarks="Detailed description of the idea"/>
-            <column name="user_id" type="BIGINT"
-                remarks="Identifier of the user who created the idea">
+            <column name="file_path" type="varchar(255)" remarks="Path of the file">
                 <constraints nullable="false"/>
             </column>
-            <column name="status" type="VARCHAR(50)" remarks="Status of the idea"/>
-            <column name="likes" type="BIGINT" defaultValueNumeric="0"
-                remarks="Number of likes received">
+            <column name="file_name" type="varchar(255)" remarks="Name of the file">
                 <constraints nullable="false"/>
             </column>
-            <column name="dislikes" type="BIGINT" defaultValueNumeric="0"
-                remarks="Number of dislikes received">
+            <column name="content_type" type="varchar(255)" remarks="Type of the content">
                 <constraints nullable="false"/>
             </column>
-            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"
-                remarks="Whether the idea is active or archived">
+            <column name="file_size" type="bigint" remarks="Size of the file">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean" defaultValueBoolean="true"
+                remarks="Whether the file is active or archived">
                 <constraints nullable="false"/>
             </column>
         </createTable>
