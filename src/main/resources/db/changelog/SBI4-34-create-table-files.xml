@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_ideas_table" author="svetlana koreneva">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ideas"/>
+            </not>
+        </preConditions>
+
+        <createTable schemaName="ideas" tableName="ideas" remarks="Table for storing ideas details">
+            <column name="idea_id" type="BIGSERIAL"
+                remarks="Unique identifier idea (Primary Key)">
+                <constraints primaryKey="true"
+                    primaryKeyName="ideas_pkey"
+                    nullable="false"/>
+            </column>
+            <column name="title" type="VARCHAR(255)" remarks="Title of the idea">
+                <constraints nullable="false"/>
+            </column>
+            <column name="annotation" type="VARCHAR(255)"
+                remarks="Short annotation or summary of the idea"/>
+            <column name="description" type="VARCHAR" remarks="Detailed description of the idea"/>
+            <column name="user_id" type="BIGINT"
+                remarks="Identifier of the user who created the idea">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="VARCHAR(50)" remarks="Status of the idea"/>
+            <column name="likes" type="BIGINT" defaultValueNumeric="0"
+                remarks="Number of likes received">
+                <constraints nullable="false"/>
+            </column>
+            <column name="dislikes" type="BIGINT" defaultValueNumeric="0"
+                remarks="Number of dislikes received">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true"
+                remarks="Whether the idea is active or archived">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create_files_table" author="Nikita Panteleenko">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="files"/>
+            </not>
+        </preConditions>
+
+        <createTable schemaName="ideas" tableName="files" remarks="Table for storing files">
+            <column name="idea_file_id" type="bigserial"
+                remarks="Unique identifier file (Primary Key)">
+                <constraints primaryKey="true"
+                    primaryKeyName="idea_file_pkey"
+                    nullable="false"/>
+            </column>
+            <column name="idea_id" type="bigint"
+                remarks="Identifier of the idea">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="file_id" type="bigint"
+                remarks="Identifier of the file">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_path" type="varchar(255)" remarks="Path of the file">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="varchar(255)" remarks="Name of the file">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content_type" type="varchar(255)" remarks="Type of the content">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_size" type="bigint" remarks="Size of the file">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="boolean" defaultValueBoolean="true"
+                remarks="Whether the file is active or archived">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
