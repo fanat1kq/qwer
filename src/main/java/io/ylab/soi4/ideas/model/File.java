@@ -18,7 +18,6 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@RequiredArgsConstructor
 @Entity
 @Table(name = "files", schema = "ideas")
 @Builder
