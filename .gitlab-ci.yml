@@ -98,10 +98,10 @@ deploy_dev:
     - |
       cat <<EOL >.env
       # Postgres connection envs
-      POSTGRES_HOST=$POSTGRES_HOST
-      POSTGRES_PORT=$POSTGRES_PORT
-      POSTGRES_DB=ideas_dev
-      POSTGRES_USER=ideas_dev_user
+      POSTGRES_HOST=$CI_POSTGRES_HOST
+      POSTGRES_PORT=$CI_POSTGRES_PORT
+      POSTGRES_DB=$CI_POSTGRES_DB
+      POSTGRES_USER=$CI_POSTGRES_USER
       POSTGRES_PASSWORD=$CI_POSTGRES_PASSWORD
       
       # Kafka connection env
