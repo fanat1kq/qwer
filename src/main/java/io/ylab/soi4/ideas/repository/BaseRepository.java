@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.NoRepositoryBean;
 
 /**
- * Base repository interface for entities. Provides basic CRUD operations and specification
- * support for interacting with the database.
+ * Base repository interface for entities. Provides basic CRUD operations and specification support
+ * for interacting with the database.
  *
  * @param <E> the type of the entity
  * @param <I> the type of the entity's identifier
