@@ -98,14 +98,11 @@ deploy_dev:
     - |
       cat <<EOL >.env
       # Postgres connection envs
-      POSTGRES_HOST=$POSTGRES_HOST
-      POSTGRES_PORT=$POSTGRES_PORT
-      POSTGRES_DB=ideas_dev
-      POSTGRES_USER=ideas_dev_user
-      POSTGRES_PASSWORD=$CI_POSTGRES_PASSWORD
-      
+      SPRING_DATASOURCE_URL=$CI_SPRING_DATASOURCE_URL
+      SPRING_DATASOURCE_USERNAME=$CI_SPRING_DATASOURCE_USERNAME
+      SPRING_DATASOURCE_PASSWORD=$CI_SPRING_DATASOURCE_PASSWORD
       # Kafka connection env
-      KAFKA_BOOTSTRAP_SERVERS=$KAFKA_HOST
+      SPRING_KAFKA_BOOTSTRAP_SERVERS=$CI_SPRING_KAFKA_BOOTSTRAP_SERVERS
       EOL
     # Создание на сервере директории для файлов проекта
     - ssh gitlabci_user@ideas-service-4-dev.ylab.io "mkdir -p /var/www/ideas-service-4-dev/ideas && exit"
