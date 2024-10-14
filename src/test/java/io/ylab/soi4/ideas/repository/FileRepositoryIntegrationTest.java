@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-
+import io.ylab.soi4.ideas.TestcontainersConfiguration;
 import io.ylab.soi4.ideas.model.File;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import io.ylab.soi4.ideas.TestcontainersConfiguration;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
@@ -27,17 +24,10 @@ class FileRepositoryIntegrationTest {
 
     private File testFile;
 
-    @DynamicPropertySource
-    static void dynamicProperties(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", () -> "jdbc:postgresql://localhost:5432/files_test");
-        registry.add("spring.datasource.username", () -> "files_test_user");
-        registry.add("spring.datasource.password", () -> "password");
-    }
-
     @BeforeEach
     void setUp() {
         fileRepository.deleteAll();
-        testFile = File.builder().ideaId(1L).fileId(1l).filePath("/Test").fileName("Test name")
+        testFile = File.builder().ideaId(1L).fileId(3L).filePath("/Test").fileName("Test name")
             .contentType("Test type").fileSize(123L).isActive(true).build();
     }
 
@@ -55,7 +45,7 @@ class FileRepositoryIntegrationTest {
     @DisplayName("Saving an file with invalid data. "
         + "Throws an exception when trying to save an file with null in required fields.")
     void testSaveFile_withInvalidData_shouldThrowException() {
-        File invalidFile =File.builder().ideaId(0L).fileId(0l).filePath(null).fileName(null)
+        File invalidFile = File.builder().ideaId(0L).fileId(4L).filePath(null).fileName(null)
             .contentType(null).fileSize(0L).isActive(false).build();
 
         assertThatThrownBy(() -> fileRepository.save(invalidFile)).isInstanceOf(
@@ -115,7 +105,8 @@ class FileRepositoryIntegrationTest {
     @DisplayName("Finding all files. Returns all files when multiple files exist.")
     void testFindAllFiles_shouldReturnAllFiles_whenMultipleFilesExist() {
         fileRepository.save(testFile);
-        File anotherFile = File.builder().ideaId(2L).fileId(1l).filePath("/Another/path").fileName("Another test name")
+        File anotherFile = File.builder().ideaId(2L).fileId(5L).filePath("/Another/path")
+            .fileName("Another test name")
             .contentType("Another test type").fileSize(456L).isActive(false).build();
         fileRepository.save(anotherFile);
 

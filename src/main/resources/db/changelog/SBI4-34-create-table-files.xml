@@ -22,7 +22,7 @@
             </column>
             <column name="idea_id" type="bigint"
                 remarks="Identifier of the idea">
-                <constraints primaryKey="true" nullable="false"/>
+                <constraints nullable="false"/>
             </column>
             <column name="file_id" type="bigint"
                 remarks="Identifier of the file">

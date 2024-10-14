@@ -20,10 +20,11 @@ public class TestcontainersConfiguration {
     @ServiceConnection
     PostgreSQLContainer<?> postgresContainer() {
         return new PostgreSQLContainer<>(DockerImageName.parse("postgres:16-alpine"))
-            .withDatabaseName("files_test")
-            .withUsername("files_test_user")
+            .withDatabaseName("ideas_test")
+            .withUsername("ideas_test_user")
             .withPassword("password")
             .withInitScript("db/init.sql");
+
     }
 
 }
