@@ -24,6 +24,7 @@ public class TestcontainersConfiguration {
             .withUsername("ideas_test_user")
             .withPassword("password")
             .withInitScript("db/init.sql");
+
     }
 
 }
