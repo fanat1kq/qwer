@@ -1,5 +1,0 @@
-spring:
-  liquibase:
-    enabled: true
-    default_schema: service_schema
-    change-log: db/changelog/changelog-master-test.xml
