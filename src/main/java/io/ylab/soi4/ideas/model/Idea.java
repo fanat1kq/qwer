@@ -89,7 +89,7 @@ public class Idea {
      * A list of files associated with the idea.
      * This defines a one-to-many relationship with the File entity.
      */
-    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "idea", cascade = CascadeType.ALL)
     private List<File> files = new ArrayList<>();
 
 

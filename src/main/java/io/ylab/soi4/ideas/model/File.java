@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -49,11 +48,10 @@ public class File {
     private Long fileId;
 
     /**
-     * The Idea entity that this file is associated with.
-     * Represents a many-to-one relationship.
-     * Not updatable or insertable in this entity to avoid circular references.
+     * The Idea entity that this file is associated with. Represents a many-to-one relationship. Not
+     * updatable or insertable in this entity to avoid circular references.
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "idea_id", nullable = false, insertable = false, updatable = false)
     private Idea idea;
 
@@ -84,6 +82,6 @@ public class File {
     /**
      * Indicates whether the file is active.
      */
-    @Column(name = "is_active" , nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")   
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
 }
