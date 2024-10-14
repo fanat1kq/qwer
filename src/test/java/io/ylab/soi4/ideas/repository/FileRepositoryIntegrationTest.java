@@ -7,6 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import io.ylab.soi4.ideas.TestcontainersConfiguration;
 import io.ylab.soi4.ideas.model.File;
 import java.util.Optional;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,9 +37,12 @@ class FileRepositoryIntegrationTest {
     void testSaveFile_shouldReturnSavedFile_whenFileIsSaved() {
         File savedFile = fileRepository.save(testFile);
 
-        assertThat(savedFile).isNotNull();
-        assertThat(savedFile.getIdeaId()).isNotNull();
-        assertThat(savedFile.getFileName()).isEqualTo("Test name");
+        SoftAssertions softly = new SoftAssertions();
+
+        softly.assertThat(savedFile).isNotNull();
+        softly.assertThat(savedFile.getIdeaId()).isNotNull();
+        softly.assertThat(savedFile.getFileName()).isEqualTo("Test name");
+        softly.assertAll();
     }
 
     @Test
