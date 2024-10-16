@@ -8,4 +8,5 @@
     <include file="SBI4-39-create-schema-ideas.xml" relativeToChangelogFile="true"/>
     <include file="SBI4-39-create-table-ideas.xml" relativeToChangelogFile="true"/>
     <include file="SBI4-34-create-table-files.xml" relativeToChangelogFile="true"/>
+    <include file="SBI4-42-create-schema-camunda.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

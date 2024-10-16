@@ -18,6 +18,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username:
     password:
+    type: org.postgresql.ds.PGSimpleDataSource
   kafka:
     bootstrap-servers:
     consumer:
@@ -50,3 +51,10 @@ info:
   application:
     name: 'Ideas'
     description: 'Модуль Ideas для проекта ideas-service-4'
+
+camunda:
+  bpm:
+    admin-user:
+      id: demo
+      password: demo
+    history-level: full
