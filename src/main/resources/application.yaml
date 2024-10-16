@@ -50,7 +50,7 @@ management:
 info:
   application:
     name: 'Ideas'
-    description: 'Модуль Ideas для проекта ideas-service-4'
+    description: 'Модуль Ideas для проекта ideas-service-4 '
 
 camunda:
   bpm:
