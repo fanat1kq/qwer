@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  ideas_service:
+  ideas-service:
     image: $IMAGE_NAME
-    container_name: ideas_service
+    container_name: ideas-service
     restart: always
     env_file:
       - .env
