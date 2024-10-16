@@ -35,3 +35,18 @@ springdoc:
   swagger-ui:
     path: /swagger
     operations-sorter: method
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info
+      base-path: /actuator
+
+info:
+  application:
+    name: 'Ideas'
+    description: 'Модуль Ideas для проекта ideas-service-4'
