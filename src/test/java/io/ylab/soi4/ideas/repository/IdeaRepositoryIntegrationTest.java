@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 import java.util.Optional;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
@@ -20,6 +21,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
+@ActiveProfiles("test")
 class IdeaRepositoryIntegrationTest {
 
     @Autowired

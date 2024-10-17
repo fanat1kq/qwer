@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  profiles:
+    active: dev
   application:
     name: ideas
   liquibase:
@@ -18,6 +20,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username:
     password:
+    type: org.postgresql.ds.PGSimpleDataSource
   kafka:
     bootstrap-servers:
     consumer:
@@ -35,21 +38,6 @@ springdoc:
   swagger-ui:
     path: /swagger
     operations-sorter: method
-
-management:
-  info:
-    env:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: info
-      base-path: /actuator
-
-info:
-  application:
-    name: 'Ideas'
-    description: 'Модуль Ideas для проекта ideas-service-4'
 
 camunda:
   bpm:
