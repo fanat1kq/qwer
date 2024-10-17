@@ -1,8 +1,6 @@
 package io.ylab.soi4.ideas.controller;
 
 import io.ylab.soi4.ideas.model.Idea;
-import io.ylab.soi4.ideas.repository.FileRepository;
-import io.ylab.soi4.ideas.repository.IdeaRepository;
 import io.ylab.soi4.ideas.service.CamundaApiService;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,11 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/create")
-public class IdeasController {
+public class IdeasCreateController {
 
     private final CamundaApiService camundaApiService;
-    private final FileRepository fileRepository;
-    private final IdeaRepository ideaRepository;
 
     /**
      * A method for intercepting a request from BFF and starting the process Camunda
@@ -70,7 +66,7 @@ public class IdeasController {
 
     /**
      * A method for intercepting a request from BFF and add fileInfo var to Camunda-process
-     * TODO - need to modify!
+     * TODO - need to modify and refactor code!
      *
      * @param camunda_id last id from task of process
      * @param idea       idea-entity
@@ -79,6 +75,7 @@ public class IdeasController {
     public ResponseEntity<String> addFilesInfo(@PathVariable String camunda_id,
         @RequestBody Idea idea) {
         Map<String, Object> vars = new HashMap<>();
+        System.out.println("Mock-object is added to Camunda! Neet to refactor!");
         vars.put("fileInfo", idea.getDescription());
         return ResponseEntity.ok().body(camundaApiService.completeRecentUserTask(camunda_id, vars));
     }
