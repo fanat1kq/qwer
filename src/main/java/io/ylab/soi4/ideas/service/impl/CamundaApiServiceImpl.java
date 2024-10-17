@@ -10,6 +10,7 @@ import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.runtime.ProcessInstantiationBuilder;
 import org.camunda.bpm.engine.task.Task;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +20,7 @@ public class CamundaApiServiceImpl implements CamundaApiService {
     private final ProcessEngine processEngine;
 
     @Bean
+    @Primary
     public ProcessEngine getProcessEngine() {
         return ProcessEngines.getDefaultProcessEngine();
     }
