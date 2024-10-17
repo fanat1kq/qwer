@@ -78,6 +78,7 @@ public class CamundaConfig {
      * @return PlatformTransactionManager
      */
     @Bean
+    @Primary
     public PlatformTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }

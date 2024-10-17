@@ -1,18 +1,72 @@
 package io.ylab.soi4.ideas.camunda.stages.createidea;
 
+import io.ylab.soi4.ideas.dto.UploadedFileInfo;
+import io.ylab.soi4.ideas.model.File;
+import io.ylab.soi4.ideas.model.Idea;
+import io.ylab.soi4.ideas.model.IdeaStatus;
+import io.ylab.soi4.ideas.service.FileService;
+import io.ylab.soi4.ideas.service.IdeaService;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
 /**
- * Delegate-class for operate last service-task in Camunda idea-create-process
- * It should save idea-entity to DB.
+ * Delegate-class for operate last service-task in Camunda idea-create-process It should save
+ * idea-entity to DB.
  */
 @Component("saveIdea")
+@RequiredArgsConstructor
 public class SaveIdea implements JavaDelegate {
 
+    private final IdeaService ideaService;
+    private final FileService fileService;
+
+    /**
+     * Creates an idea and associated files in a BPMN process.
+     *
+     * @param delegateExecution BPMN execution context with necessary variables
+     * @throws Exception if process execution fails
+     */
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        System.out.println("Saving idea to DB...");
+        String title = (String) delegateExecution.getVariable("title");
+        String annotation = (String) delegateExecution.getVariable("annotation");
+        String description = (String) delegateExecution.getVariable("description");
+
+        List<File> files = convertToFileList(
+            (List<UploadedFileInfo>) delegateExecution.getVariable("filesInfo"));
+
+        Idea idea = Idea.builder().title(title).annotation(annotation).description(description)
+            .userId(1L).status(IdeaStatus.HANDLING).likes(0L).dislikes(0L).isActive(true)
+            .build(); // Необходимо передавать реальный user_id
+
+        Long ideaId = ideaService.create(idea).getIdeaId();
+
+        for (File file : files) {
+            file.setIdeaId(ideaId);
+            file.setFileId(1L); // Необходимо передавать реальный file_id
+            fileService.create(file);
+        }
+    }
+
+    /**
+     * Converts a list of {@link UploadedFileInfo} to {@link File} entities.
+     *
+     * @param uploadedFiles list of {@link UploadedFileInfo} to convert
+     * @return list of {@link File} entities
+     */
+    public List<File> convertToFileList(List<UploadedFileInfo> uploadedFiles) {
+        return uploadedFiles.stream().map(uploadedFileInfo -> {
+            File file = new File();
+            file.setFileName(uploadedFileInfo.getFileName());
+            file.setFilePath(uploadedFileInfo.getFilePath());
+            file.setContentType(uploadedFileInfo.getContentType());
+            file.setFileSize(uploadedFileInfo.getFileSize());
+            file.setIsActive(uploadedFileInfo.getIsActive());
+            return file;
+        }).collect(Collectors.toList());
     }
 }
