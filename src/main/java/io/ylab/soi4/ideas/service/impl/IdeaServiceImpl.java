@@ -1,7 +1,6 @@
 package io.ylab.soi4.ideas.service.impl;
 
 import io.ylab.soi4.ideas.model.Idea;
-import io.ylab.soi4.ideas.repository.FileRepository;
 import io.ylab.soi4.ideas.repository.IdeaRepository;
 import io.ylab.soi4.ideas.service.IdeaService;
 import lombok.RequiredArgsConstructor;

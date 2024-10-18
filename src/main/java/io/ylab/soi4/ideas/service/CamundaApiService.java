@@ -1,8 +1,6 @@
 package io.ylab.soi4.ideas.service;
 
 import java.util.Map;
-import org.camunda.bpm.engine.ProcessEngine;
-import org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration;
 
 /**
  * Interface for accessing camundaApi via java-code

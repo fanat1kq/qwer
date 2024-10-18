@@ -1,13 +1,11 @@
 package io.ylab.soi4.ideas.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.ylab.soi4.ideas.dto.UploadedFileInfo;
-import io.ylab.soi4.ideas.model.File;
 import io.ylab.soi4.ideas.service.CamundaApiService;
 import java.util.List;
 import java.util.Map;

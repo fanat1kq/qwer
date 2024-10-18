@@ -1,6 +1,5 @@
 package io.ylab.soi4.ideas.service;
 
-import io.ylab.soi4.ideas.model.File;
 import io.ylab.soi4.ideas.model.Idea;
 
 /**
