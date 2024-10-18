@@ -84,4 +84,5 @@ public class File {
      */
     @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
+
 }

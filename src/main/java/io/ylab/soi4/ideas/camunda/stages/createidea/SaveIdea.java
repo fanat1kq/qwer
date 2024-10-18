@@ -3,7 +3,6 @@ package io.ylab.soi4.ideas.camunda.stages.createidea;
 import io.ylab.soi4.ideas.dto.UploadedFileInfo;
 import io.ylab.soi4.ideas.model.File;
 import io.ylab.soi4.ideas.model.Idea;
-import io.ylab.soi4.ideas.model.IdeaStatus;
 import io.ylab.soi4.ideas.service.FileService;
 import io.ylab.soi4.ideas.service.IdeaService;
 import java.util.List;
@@ -40,14 +39,13 @@ public class SaveIdea implements JavaDelegate {
             (List<UploadedFileInfo>) delegateExecution.getVariable("filesInfo"));
 
         Idea idea = Idea.builder().title(title).annotation(annotation).description(description)
-            .userId(1L).status(IdeaStatus.HANDLING).likes(0L).dislikes(0L).isActive(true)
-            .build(); // Необходимо передавать реальный user_id
+            .userId(1L).build(); // Необходимо получать user_id из токена
 
         Long ideaId = ideaService.create(idea).getIdeaId();
 
         for (File file : files) {
             file.setIdeaId(ideaId);
-            file.setFileId(1L); // Необходимо передавать реальный file_id
+            file.setFileId(1L); // Необходимо будет удалить это поле из таблицы и сущности
             fileService.create(file);
         }
     }
