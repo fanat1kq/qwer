@@ -1,6 +1,8 @@
 server:
   port: 8080
 spring:
+  profiles:
+    active: dev
   application:
     name: ideas
   liquibase:
@@ -18,6 +20,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username:
     password:
+    type: org.postgresql.ds.PGSimpleDataSource
   kafka:
     bootstrap-servers:
     consumer:
@@ -45,6 +48,15 @@ management:
       exposure:
         include: info
       base-path: /actuator
+
+camunda:
+  bpm:
+    admin-user:
+      id: demo
+      password: demo
+    history-level: full
+  misc:
+    schema: camunda_schema
 
 info:
   application:
