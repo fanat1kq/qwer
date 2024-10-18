@@ -29,6 +29,24 @@ public class CamundaConfig {
     @Value("${spring.datasource.password}")
     private String password;
 
+    @Value("${camunda.misc.schema}")
+    private String camundaSchema;
+
+    /**
+     * Method for returning default DriverManagerDataSource for preparing desirable
+     * Beans of Datasource
+     *
+     * @return DriverManagerDataSource
+     */
+    private DriverManagerDataSource getDefaultDataManagerDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(userName);
+        dataSource.setPassword(password);
+        return dataSource;
+    }
+
     /**
      * Datasource-bean for main-app with default params for db-connection
      *
@@ -37,12 +55,7 @@ public class CamundaConfig {
     @Bean
     @Primary
     public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(userName);
-        dataSource.setPassword(password);
-        return dataSource;
+        return getDefaultDataManagerDataSource();
     }
 
     /**
@@ -53,11 +66,8 @@ public class CamundaConfig {
     @Bean
     @Qualifier("camundaBpmDataSource")
     public DataSource camundaBpmDataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url + "?currentSchema=camunda_schema");
-        dataSource.setUsername(userName);
-        dataSource.setPassword(password);
+        DriverManagerDataSource dataSource = getDefaultDataManagerDataSource();
+        dataSource.setUrl(url + "?currentSchema=" + camundaSchema);
         return dataSource;
     }
 

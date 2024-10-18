@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/ideas/create")
-public class IdeasController {
+@RequestMapping("/create")
+public class IdeasCreateController {
 
     private final CamundaApiService camundaApiService;
 
